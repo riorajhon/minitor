@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAddressesByCountry, deleteAddress } from '../services/statsService';
 import './CountryDetail.css';
@@ -12,25 +12,27 @@ const CountryDetail = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('all');
   const [deletingAddresses, setDeletingAddresses] = useState(new Set());
+  const [lastRefresh, setLastRefresh] = useState(Date.now());
 
-  useEffect(() => {
-    fetchAddresses();
-  }, [countryIdentifier, currentPage, statusFilter]);
-
-  const fetchAddresses = async () => {
+  const fetchAddresses = useCallback(async () => {
     try {
       setLoading(true);
       const status = statusFilter === 'all' ? null : parseInt(statusFilter);
       const response = await getAddressesByCountry(countryIdentifier, currentPage, 50, status);
       setData(response.data);
       setError(null);
+      setLastRefresh(Date.now());
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch addresses');
       console.error('Error:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [countryIdentifier, currentPage, statusFilter]);
+
+  useEffect(() => {
+    fetchAddresses();
+  }, [fetchAddresses]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -50,7 +52,13 @@ const CountryDetail = () => {
   };
 
   const handleDeleteAddress = async (addressId, fullAddress) => {
+    // First confirmation
     if (!window.confirm(`Are you sure you want to delete this address?\n\n"${fullAddress}"\n\nThis action cannot be undone.`)) {
+      return;
+    }
+
+    // Second confirmation (double-check)
+    if (!window.confirm(`FINAL CONFIRMATION\n\nYou are about to permanently delete:\n"${fullAddress}"\n\nThis cannot be undone. Are you absolutely sure?`)) {
       return;
     }
 
@@ -60,8 +68,15 @@ const CountryDetail = () => {
       const result = await deleteAddress(addressId);
       
       if (result.success) {
-        // Refresh the addresses list
-        fetchAddresses();
+        // Update the local state instead of refetching to avoid refresh
+        setData(prevData => ({
+          ...prevData,
+          addresses: prevData.addresses.filter(addr => addr._id !== addressId),
+          pagination: {
+            ...prevData.pagination,
+            totalCount: prevData.pagination.totalCount - 1
+          }
+        }));
         alert('Address deleted successfully!');
       } else {
         alert(`Failed to delete address: ${result.message}`);
@@ -109,6 +124,17 @@ const CountryDetail = () => {
       <div className="detail-header">
         <h2>{country.name} ({country.code}) - {pagination.totalCount.toLocaleString()} addresses</h2>
         <div className="header-controls">
+          <div className="refresh-info">
+            <small>Last updated: {new Date(lastRefresh).toLocaleTimeString()}</small>
+            <button 
+              onClick={fetchAddresses} 
+              className="manual-refresh-btn"
+              disabled={loading}
+              title="Refresh addresses"
+            >
+              {loading ? '🔄' : '↻'} Refresh
+            </button>
+          </div>
           <div className="filter-group">
             <label htmlFor="status-filter">Filter:</label>
             <select 
@@ -134,6 +160,7 @@ const CountryDetail = () => {
             <tr>
               <th>No.</th>
               <th>Full Address</th>
+              <th>Country Name</th>
               <th>City</th>
               <th>Street Name</th>
               <th>Status</th>
@@ -144,7 +171,7 @@ const CountryDetail = () => {
           <tbody>
             {addresses.length === 0 ? (
               <tr>
-                <td colSpan="7" className="no-data">
+                <td colSpan="8" className="no-data">
                   No addresses found
                 </td>
               </tr>
@@ -155,6 +182,7 @@ const CountryDetail = () => {
                     {(currentPage - 1) * 50 + index + 1}
                   </td>
                   <td className="full-address">{address.fulladdress}</td>
+                  <td className="country-name">{address.country_name || country.name || 'N/A'}</td>
                   <td className="city">{address.city}</td>
                   <td className="street-name">{address.street_name || 'N/A'}</td>
                   <td>

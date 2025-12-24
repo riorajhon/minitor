@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getCountryStats, getAddressesByCountry, getCountryProcessingStatus, updateCountryStatus, runAddressGenerator, streamProcessOutput, getActiveProcesses, cancelProcess, deleteAddress, deleteCountryStatus, deleteDuplicateAddresses, getCombinedCountryData } = require('../controllers/statsController');
+const { getCountryStats, getAddressesByCountry, getCountryProcessingStatus, updateCountryStatus, runAddressGenerator, streamProcessOutput, getActiveProcesses, cancelProcess, deleteAddress, deleteCountryStatus, deleteDuplicateAddresses, getCombinedCountryData, getErrors, deleteError, deleteErrorsByFilter } = require('../controllers/statsController');
 
 // GET /api/stats/countries - Get country statistics
 router.get('/countries', getCountryStats);
@@ -37,5 +37,14 @@ router.delete('/duplicates', deleteDuplicateAddresses);
 
 // GET /api/stats/combined - Get combined country data (status + address counts)
 router.get('/combined', getCombinedCountryData);
+
+// GET /api/stats/errors - Get all errors with pagination and filtering
+router.get('/errors', getErrors);
+
+// DELETE /api/stats/errors/:errorId - Delete a specific error
+router.delete('/errors/:errorId', deleteError);
+
+// DELETE /api/stats/errors - Delete multiple errors by filter
+router.delete('/errors', deleteErrorsByFilter);
 
 module.exports = router;

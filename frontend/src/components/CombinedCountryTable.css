@@ -72,6 +72,18 @@
   border-color: #ffd93d;
 }
 
+.summary-item.checking {
+  color: #383d41;
+  background-color: #e2e3e5;
+  border-color: #d6d8db;
+}
+
+.summary-item.checked {
+  color: #004085;
+  background-color: #b8daff;
+  border-color: #9fcdff;
+}
+
 .summary-item.total {
   color: #495057;
   background-color: #e9ecef;
@@ -169,6 +181,21 @@
 
 .process-monitor-btn:hover {
   background-color: #218838;
+}
+
+.error-management-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.error-management-btn:hover {
+  background-color: #c82333;
 }
 
 .refresh-btn {
@@ -304,6 +331,18 @@
   background-color: #ffeaa7;
   color: #856404;
   border: 1px solid #ffd93d;
+}
+
+.status-checking {
+  background-color: #e2e3e5;
+  color: #383d41;
+  border: 1px solid #d6d8db;
+}
+
+.status-checked {
+  background-color: #b8daff;
+  color: #004085;
+  border: 1px solid #9fcdff;
 }
 
 .status-unknown {

@@ -441,4 +441,5 @@ def main():
     print(json.dumps(result, indent=2, default=str))
 
 if __name__ == "__main__":
-    main()
+    generator = ImprovedAddressGenerator()
+    print(generator.looks_like_address("1 к1 Комбинатская улица, Новосибирск, Russia"))

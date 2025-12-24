@@ -126,7 +126,7 @@ const CombinedCountryTable = () => {
       const result = await dispatch(deleteCountryStatusAsync({ countryCode }));
       
       if (deleteCountryStatusAsync.fulfilled.match(result)) {
-        alert('Country status deleted successfully!');
+        // Country deleted successfully - no alert needed
       } else {
         alert(`Failed to delete country status: ${result.payload || 'Unknown error'}`);
       }
@@ -270,6 +270,12 @@ const CombinedCountryTable = () => {
               <span className="summary-item retry">
                 RETRY <strong>{data.summary.retry || 0}</strong>
               </span>
+              <span className="summary-item checking">
+                CHECKING <strong>{data.summary.checking || 0}</strong>
+              </span>
+              <span className="summary-item checked">
+                CHECKED <strong>{data.summary.checked || 0}</strong>
+              </span>
               <span className="summary-item total">
                 TOTAL <strong>{data.total || 0}</strong>
               </span>
@@ -305,6 +311,8 @@ const CombinedCountryTable = () => {
             <option value="skipped">Skipped</option>
             <option value="processing">Processing</option>
             <option value="retry">Retry</option>
+            <option value="checking">Checking</option>
+            <option value="checked">Checked</option>
           </select>
 
           <button onClick={() => setShowGeneratorModal(true)} className="generator-modal-btn">
@@ -312,6 +320,9 @@ const CombinedCountryTable = () => {
           </button>
           <button onClick={() => setShowProcessMonitor(true)} className="process-monitor-btn">
             📊 Processes
+          </button>
+          <button onClick={() => navigate('/errors')} className="error-management-btn">
+            ⚠️ Errors
           </button>
           <button onClick={fetchData} className="refresh-btn">
             Refresh
@@ -398,6 +409,8 @@ const CombinedCountryTable = () => {
                         <option value="skipped">Skipped</option>
                         <option value="processing">Processing</option>
                         <option value="retry">Retry</option>
+                        <option value="checking">Checking</option>
+                        <option value="checked">Checked</option>
                       </select>
                       {updating[country.country_code] && (
                         <div className="updating-spinner"></div>

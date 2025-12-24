@@ -130,3 +130,44 @@ export const getCombinedCountryData = async () => {
     throw error;
   }
 };
+
+export const getErrors = async (page = 1, limit = 50, type = null, country = null) => {
+  try {
+    let url = `${API_BASE_URL}/stats/errors?page=${page}&limit=${limit}`;
+    if (type) {
+      url += `&type=${encodeURIComponent(type)}`;
+    }
+    if (country) {
+      url += `&country=${encodeURIComponent(country)}`;
+    }
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching errors:', error);
+    throw error;
+  }
+};
+
+export const deleteError = async (errorId) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/stats/errors/${errorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting error:', error);
+    throw error;
+  }
+};
+
+export const deleteErrorsByFilter = async (type = null, country = null) => {
+  try {
+    const data = {};
+    if (type) data.type = type;
+    if (country) data.country = country;
+    
+    const response = await axios.delete(`${API_BASE_URL}/stats/errors`, { data });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting errors by filter:', error);
+    throw error;
+  }
+};

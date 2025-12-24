@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const AddressCollection = require('../models/AddressCollection');
+const Error = require('../models/Error');
 const { spawn } = require('child_process');
 const path = require('path');
 
@@ -668,6 +669,159 @@ const getCombinedCountryData = async (req, res) => {
   }
 };
 
+// Get all errors with pagination and filtering
+const getErrors = async (req, res) => {
+  try {
+    const { page = 1, limit = 50, type, country } = req.query;
+    const skip = (page - 1) * limit;
+    
+    // Build filter
+    let filter = {};
+    if (type) {
+      filter.type = type;
+    }
+    if (country) {
+      filter.country = country;
+    }
+
+    // Get errors with pagination
+    const errors = await Error.find(filter)
+      .sort({ timestamp: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    // Get total count for pagination
+    const totalCount = await Error.countDocuments(filter);
+    
+    // Get error type summary
+    const typeSummary = await Error.aggregate([
+      ...(Object.keys(filter).length > 0 ? [{ $match: filter }] : []),
+      {
+        $group: {
+          _id: '$type',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        errors,
+        pagination: {
+          currentPage: parseInt(page),
+          totalPages: Math.ceil(totalCount / limit),
+          totalCount,
+          limit: parseInt(limit)
+        },
+        summary: {
+          types: typeSummary,
+          total: totalCount
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching errors:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching errors',
+      error: error.message
+    });
+  }
+};
+
+// Delete an error by ID
+const deleteError = async (req, res) => {
+  try {
+    const { errorId } = req.params;
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(errorId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid error ID format'
+      });
+    }
+
+    // Find and delete the error
+    const deletedError = await Error.findByIdAndDelete(errorId);
+
+    if (!deletedError) {
+      return res.status(404).json({
+        success: false,
+        message: 'Error not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Error deleted successfully',
+      data: {
+        deletedError: {
+          id: deletedError._id,
+          type: deletedError.type,
+          seed: deletedError.seed,
+          reason: deletedError.reason
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Error deleting error record:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting error record',
+      error: error.message
+    });
+  }
+};
+
+// Delete multiple errors by filter
+const deleteErrorsByFilter = async (req, res) => {
+  try {
+    const { type, country } = req.body;
+    
+    // Build filter
+    let filter = {};
+    if (type) {
+      filter.type = type;
+    }
+    if (country) {
+      filter.country = country;
+    }
+
+    if (Object.keys(filter).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'At least one filter (type or country) is required'
+      });
+    }
+
+    // Delete errors matching the filter
+    const result = await Error.deleteMany(filter);
+
+    res.json({
+      success: true,
+      message: `Deleted ${result.deletedCount} error records`,
+      data: {
+        deletedCount: result.deletedCount,
+        filter
+      }
+    });
+
+  } catch (error) {
+    console.error('Error deleting error records:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting error records',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getCountryStats,
   getAddressesByCountry,
@@ -680,5 +834,8 @@ module.exports = {
   deleteAddress,
   deleteCountryStatus,
   deleteDuplicateAddresses,
-  getCombinedCountryData
+  getCombinedCountryData,
+  getErrors,
+  deleteError,
+  deleteErrorsByFilter
 };

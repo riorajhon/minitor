@@ -1,0 +1,461 @@
+.error-management-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.error-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
+.error-header h2 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #495057;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.type-filter {
+  padding: 4px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  background: white;
+  font-size: 11px;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.type-filter:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.bulk-delete-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.bulk-delete-btn:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.bulk-delete-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.refresh-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.refresh-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.back-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #2980b9;
+}
+
+.errors-table-wrapper {
+  flex: 1;
+  overflow: auto;
+  background: white;
+}
+
+.errors-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: white;
+}
+
+.errors-table th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+  z-index: 10;
+  font-size: 11px;
+}
+
+.errors-table th:first-child {
+  text-align: center;
+  width: 50px;
+}
+
+.errors-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f8f9fa;
+  vertical-align: middle;
+  background: white;
+}
+
+.errors-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.row-number {
+  font-weight: 500;
+  color: #6c757d;
+  text-align: center;
+  font-size: 11px;
+}
+
+.error-type {
+  font-weight: 500;
+  color: #e74c3c;
+  font-size: 12px;
+}
+
+.error-seed {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  color: #2c3e50;
+  font-size: 11px;
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+.error-reason {
+  color: #495057;
+  font-size: 12px;
+  max-width: 250px;
+  word-wrap: break-word;
+  line-height: 1.3;
+}
+
+.timestamp {
+  color: #6c757d;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.actions-cell {
+  text-align: center;
+  padding: 6px 8px !important;
+  width: 100px;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  min-width: 75px;
+  white-space: nowrap;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.delete-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-spinner {
+  width: 10px;
+  height: 10px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.no-data {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 40px;
+  font-size: 12px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.pagination-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.pagination-page {
+  background: #e9ecef;
+  color: #495057;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 32px;
+}
+
+.pagination-page:hover {
+  background: #dee2e6;
+}
+
+.pagination-page.active {
+  background: #3498db;
+  color: white;
+}
+
+.pagination-page.active:hover {
+  background: #2980b9;
+}
+
+.pagination-info {
+  color: #495057;
+  font-size: 11px;
+  font-weight: 500;
+  margin: 0 8px;
+  white-space: nowrap;
+}
+
+.error-management-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6c757d;
+}
+
+.error-management-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #e74c3c;
+}
+
+.retry-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 12px;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.retry-btn:hover {
+  background: #c0392b;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .error-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .error-header h2 {
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .header-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+  
+  .type-filter {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .errors-table {
+    font-size: 11px;
+  }
+  
+  .errors-table th,
+  .errors-table td {
+    padding: 4px 6px;
+  }
+  
+  .error-seed, .error-reason {
+    max-width: 120px;
+    font-size: 10px;
+  }
+  
+  .timestamp {
+    font-size: 9px;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .pagination-pages {
+    order: -1;
+  }
+  
+  .pagination-info {
+    font-size: 10px;
+    text-align: center;
+    order: 1;
+  }
+  
+  .pagination-btn {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .pagination-page {
+    font-size: 10px;
+    padding: 4px 8px;
+    min-width: 28px;
+  }
+}
